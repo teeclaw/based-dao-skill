@@ -7,7 +7,25 @@ description: Bid on BASED DAO NFT auctions on Base. Check current auction status
 
 Bid on BASED DAO NFT auctions on Base network. Each 24-hour auction mints one governance NFT.
 
-## Quick Start
+## Telegram Control Panel (Inline Buttons)
+
+**Show the control panel:**
+```bash
+node scripts/show-buttons.js
+```
+
+This displays a persistent button panel in Telegram with quick actions:
+- 📊 Check Auction - Get current auction status
+- 💰 Quick Bid 0.001Ξ - Place a bid instantly
+- 📋 Active Proposals - View active governance proposals
+- 🗳️ All Proposals - View all proposals (including past)
+- 🔄 Refresh Panel - Update the panel with latest data
+
+**Button callbacks are handled automatically** via `handle-command.js`.
+
+When a user clicks a button, OpenClaw routes the callback (e.g., `/based_check`) back as a message, which triggers the corresponding script.
+
+## Quick Start (CLI)
 
 **Check current auction:**
 ```bash
@@ -199,3 +217,52 @@ const gasEstimate = await contract.createBid.estimateGas(
 - Each NFT = 1 governance vote
 - Treasury accumulates from auction proceeds
 - Continuous daily auctions (no gaps)
+
+## Inline Buttons Implementation
+
+### Architecture
+
+The inline button system consists of two scripts:
+
+**1. show-buttons.js** - Display the control panel
+- Fetches current auction status
+- Formats panel message
+- Returns button configuration for OpenClaw's message tool
+- Buttons include `text` (display) and `callback_data` (command to execute)
+
+**2. handle-command.js** - Process button callbacks
+- Routes button callbacks to appropriate scripts
+- Supports commands:
+  - `/based_check` → check-auction.js
+  - `/based_bid <amount>` → place-bid.js
+  - `/based_proposals` → check-proposals.js (active only)
+  - `/based_proposals_all` → check-proposals.js --all
+  - `/based_refresh` → show-buttons.js (refresh panel)
+
+### Usage from OpenClaw
+
+**Show control panel:**
+```javascript
+const { showButtons } = await import('./scripts/show-buttons.js');
+const { message, buttons } = await showButtons();
+
+// Use message tool to send
+message({ 
+  action: 'send',
+  message: message,
+  buttons: buttons 
+});
+```
+
+**Handle callback when user clicks button:**
+```javascript
+const { handleCommand } = await import('./scripts/handle-command.js');
+const result = await handleCommand('/based_check');
+// Send result back to user
+```
+
+### Button Persistence
+
+Telegram inline buttons are persistent - once sent, they remain functional until the message is deleted. Users can interact with the panel at any time without needing to regenerate it.
+
+To update the panel with fresh data, click "🔄 Refresh Panel".
