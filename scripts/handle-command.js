@@ -40,6 +40,9 @@ async function handleCommand(command) {
       case '/based_proposals_all':
         return await checkProposals(true);
       
+      case '/based_settle':
+        return await settleAuction();
+      
       case '/based_refresh':
         return await refreshPanel();
       
@@ -102,6 +105,20 @@ async function checkProposals(all = false) {
     return `${title}\n\n${stdout.trim()}`;
   } catch (error) {
     return `❌ Failed to check proposals: ${error.message}`;
+  }
+}
+
+/**
+ * Settle the current auction
+ */
+async function settleAuction() {
+  try {
+    const { stdout } = await execAsync('node scripts/settle-auction.js', {
+      cwd: SKILL_DIR
+    });
+    return `⚙️ **Auction Settlement**\n\n${stdout.trim()}`;
+  } catch (error) {
+    return `❌ Failed to settle auction: ${error.message}`;
   }
 }
 

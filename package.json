@@ -1,0 +1,24 @@
+{
+  "name": "based-dao-skill",
+  "version": "1.0.0",
+  "description": "OpenClaw skill for bidding on BASED DAO NFT auctions on Base network.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teeclaw/based-dao-skill.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teeclaw/based-dao-skill/issues"
+  },
+  "homepage": "https://github.com/teeclaw/based-dao-skill#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "ethers": "^6.16.0"
+  }
+}

@@ -59,6 +59,7 @@ async function sendPanel() {
             { text: '🗳️ All Proposals', callback_data: '/based_proposals_all' }
           ],
           [
+            { text: '⚙️ Settle Auction', callback_data: '/based_settle' },
             { text: '🔄 Refresh Panel', callback_data: '/based_refresh' }
           ]
         ]
