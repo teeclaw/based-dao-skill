@@ -24,7 +24,42 @@ Copy the scripts and reference files to your project and use them directly with 
 - ✅ Place bids with full validation
 - ✅ View governance proposals
 - ✅ Vote on proposals (requires NFT ownership)
+- ✅ **Telegram inline buttons** - Interactive control panel with persistent buttons
 - ✅ Safety checks and clear error messages
+
+## Telegram Control Panel (NEW!)
+
+For OpenClaw users with Telegram integration, you can control BASED DAO auctions via an interactive button panel.
+
+### Quick Start
+
+Say **"based dao"** to your agent, and it will send an interactive control panel with buttons:
+
+- 📊 **Check Auction** - Get current auction status
+- 💰 **Quick Bid 0.001Ξ** - Place a bid instantly
+- 📋 **Active Proposals** - View active governance proposals
+- 🗳️ **All Proposals** - View all proposals (including past)
+- 🔄 **Refresh Panel** - Update the panel with latest data
+
+**Requirements:**
+- OpenClaw with Telegram channel enabled
+- `channels.telegram.capabilities.inlineButtons` set to `"all"` or `"allowlist"`
+- Bot token configured in OpenClaw config
+
+### How It Works
+
+1. **Panel Display**: `send-panel.js` sends a message with `InlineKeyboardMarkup` via Telegram Bot API
+2. **Button Callbacks**: When clicked, buttons send commands like `/based_check` back to the agent
+3. **Command Routing**: `handle-command.js` processes the callback and runs the appropriate script
+4. **Persistent**: Buttons remain functional until the message is deleted
+
+### Manual Panel Send
+
+```bash
+node scripts/send-panel.js <chat_id>
+```
+
+This bypasses OpenClaw's message tool and sends buttons directly via Telegram Bot API.
 
 ## Usage
 
@@ -194,11 +229,15 @@ Gas cost: 0.000805 ETH
 based-dao/
 ├── SKILL.md                 # Skill documentation for OpenClaw
 ├── README.md                # This file
+├── CHANGELOG.md             # Version history and updates
 ├── scripts/
 │   ├── check-auction.js     # Check current auction status
 │   ├── place-bid.js         # Place a bid on current auction
 │   ├── check-proposals.js   # View governance proposals
-│   └── vote.js              # Vote on proposals
+│   ├── vote.js              # Vote on proposals
+│   ├── send-panel.js        # Send Telegram control panel with inline buttons
+│   ├── show-buttons.js      # Generate button config for OpenClaw
+│   └── handle-command.js    # Process button callbacks
 └── references/
     ├── auction-abi.json     # Auction house contract ABI
     ├── governor-abi.json    # Governor contract ABI
